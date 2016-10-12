@@ -68,32 +68,39 @@ func add(array: [Int]?) -> Int? {
 }
 
 func multiply(array: [Int]?) -> Int? {
-    if checkNil(obj: array) {
-        return nil
-    }
-    var result = 1
-    for num in array! {
-        result *= num
-    }
-    return result
+    return reduce(array: array, check: 1, operation: multiply)
 }
 
 func count(array: [Int]?) -> Int? {
-    if checkNil(obj: array) {
-        return nil
-    }
-    return array!.count
+    return reduce(array: array, check: 0, operation: count)
 }
 
 func average(array: [Int]?) -> Int? {
+    return add(array: array)! / count(array: array)!
+}
+
+func reduce(array: [Int]?, check: Int = -1, operation: ([Int]?) -> Int?) -> Int? {
     if checkNil(obj: array) {
         return nil
     }
-    return add(array: array)! / array!.count
-}
-
-func reduce(array: [Int]?, operation: ([Int]?) -> Int?) -> Int? {
-    return operation(array)
+    
+    if check == -1 {
+        return operation(array)
+    } else {
+        var result = check
+        for num in array! {
+            switch check {
+            case 1:
+                result *= num
+            case 0:
+                result += 1
+            default:
+                print("Unknown reduce call")
+                return nil
+            }
+        }
+        return result
+    }
 }
 
 func add(p1: (x: Int, y: Int), p2: (x: Int, y: Int)) -> (x: Int, y: Int) {
